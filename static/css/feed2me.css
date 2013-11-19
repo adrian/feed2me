@@ -1,0 +1,19 @@
+h1 {
+    text-align: center
+}
+
+#feeds .feed {
+    cursor: pointer;
+}
+
+#feeds .feed.selected {
+    background-color: #ffc;
+}
+
+#delete-feed-button {
+    float: right;
+}
+
+.busy {
+    cursor: wait !important;
+}

@@ -1,0 +1,5 @@
+cron:
+- description: check for new feed items
+  url: /check_feeds
+  schedule: every 15 minutes
+

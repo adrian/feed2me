@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+	<channel>
+		<title>Test RSS Blog</title>
+		<atom:link href="http://www.test.com/feed/" rel="self" type="application/rss+xml" />
+		<link>http://www.test.com</link>
+		<description></description>
+		<lastBuildDate>Wed, 25 Sep 2013 12:43:18 +0000</lastBuildDate>
+		<language>en-US</language>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+		<generator>http://wordpress.org/?v=3.7.1</generator>
+		<item>
+			<title>Test Post</title>
+			<link>http://www.test.com/2013/09/24/test-post/</link>
+			<comments></comments>
+			<pubDate>Tue, 24 Sep 2013 19:27:33 +0000</pubDate>
+			<dc:creator><![CDATA[Adrian]]></dc:creator>
+			<category><![CDATA[cat1]]></category>
+			<guid isPermaLink="false">http://www.test.com/?p=744</guid>
+			<description><![CDATA[This is the test RSS post description]]></description>
+			<content:encoded><![CDATA[This is the test RSS post content]]></content:encoded>
+			<wfw:commentRss>http://www.test.com/2013/09/24/test-post/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		</item>
+	</channel>
+</rss>

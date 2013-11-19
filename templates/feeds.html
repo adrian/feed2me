@@ -1,0 +1,44 @@
+{% extends "templates/base.html" %}
+
+{% block title %}Feeds{% endblock %}
+
+{% block content %}
+  <h1>My Feeds</h1>
+
+  <div id="message-placeholder"></div>
+
+  <form onsubmit="return false" class="form-inline">
+    <div class="form-group">
+      <input type="text" size="64" class="form-control" id="feed_url" placeholder="Feed URL"></input>
+    </div>
+    <button id="add_feed" class="btn btn-default">Add</button>
+  </form>
+
+  <hr>
+
+  <div id="no_feeds_message" style="display: none">You're not tracking any feeds yet.</div>
+
+  <table id="feeds" class="table table-hover table-bordered">
+    <tbody>
+    {% for feed in feeds %}
+    <tr class="feed">
+      <td style="border-right: 0">
+        <strong>{{ feed.name }}</strong><br>
+        <span class="feed-url text-muted">{{ feed.url }}</span>
+      </td>
+      <td style="vertical-align: middle; border-left: 0"></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  {% if logout_url is string %}
+    <a href="{{ logout_url }}">Logout</a>
+  {% endif %}
+
+  <div id="delete-button-html" style="display: none">
+    <button id="delete-feed-button" type="button" class="btn btn-default btn-sm">
+      <span class="glyphicon glyphicon-trash"></span> Delete
+    </button>
+  </div>
+{% endblock %}

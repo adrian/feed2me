@@ -1,0 +1,14 @@
+Ideas for Improvement
+
+* Make the email subject and body configurable
+* Include the date the feed was last checked on UI
+* Investigate using GAE Task Queues
+* Support Readability for publishing
+* Use templates in the UI
+* More tests for CheckFeedsHandler
+* Use a request per feed to check feeds for new entries
+* Support for daily digest rather than mail per entry
+* Include user's email address on UI
+* Improve the UI look and feel
+* Paginate feeds
+* Import/Export feeds
