@@ -137,9 +137,9 @@ class CheckFeedsHandler(webapp2.RequestHandler):
             # parsed_feed.updated_parsed regardless of the feed type.
             # Unfortunately that doesn't appear to be the case.
             # If we can't determine the feed's update date then skip it.
-            feed_update_date = parsed_feed.updated_parsed \
-                if "updated_parsed" in parsed_feed \
-                    else parsed_feed.feed.updated_parsed
+            feed_update_date = parsed_feed.get("updated_parsed")
+            if feed_update_date is None:
+                feed_update_date = parsed_feed.feed.get("updated_parsed")
             if feed_update_date is None:
                 logging.debug("Feed '%s' has no updated date" % feed.url)
                 continue
