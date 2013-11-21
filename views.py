@@ -188,4 +188,4 @@ class CheckFeedsHandler(webapp2.RequestHandler):
             feed.date_of_last_entry = date_of_most_recent_entry
             feed.put()
 
-            logging.debug("Published %d new extries for \"%s\"" % (new_entries, feed.url))
+            logging.debug("Published %d new entries for \"%s\"" % (new_entries, feed.url))
