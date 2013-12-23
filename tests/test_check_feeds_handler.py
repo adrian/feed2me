@@ -20,6 +20,7 @@ class CheckFeedsHandlerTestCase(unittest.TestCase):
         self.testbed.activate()
         self.testbed.init_memcache_stub()
         self.testbed.init_datastore_v3_stub()
+        self.orig_publish_entry_func = feed_utils.publish_entry
 
     def test_get(self):
         # Create a dummy feed with a last_checked date well in the past
@@ -52,4 +53,4 @@ class CheckFeedsHandlerTestCase(unittest.TestCase):
 
     def tearDown(self):
         self.testbed.deactivate()
-
+        feed_utils.publish_entry = self.orig_publish_entry_func
