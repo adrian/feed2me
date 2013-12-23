@@ -138,10 +138,12 @@ class CheckFeedsHandler(webapp2.RequestHandler):
             new_entries = 0
             parsed_feed = feedparser.parse(feed.url)
 
-            # 304 means the feed hasn't changed since the last request so let's
-            # move on to the next feed
-            if "status" in parsed_feed and parsed_feed.status == 304:
-                continue
+            # If the URL has moved permanently then record the new URL
+            if "status" in parsed_feed and parsed_feed.status == 301:
+                logging.info("Feed %s has a new URL: %s" %
+                    (feed.url, parsed_feed.href))
+                feed.url = parsed_feed.href
+                feed.put()
 
             # Determine the last update date of the feed. The feedparser
             # documentation suggests this should be available at
