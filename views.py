@@ -25,7 +25,7 @@ def create_feed_from_url(url):
         the response isn't RSS then throw an error """
     f = feedparser.parse(url)
 
-    if 'status' in f and f.status in (200, 301):
+    if 'status' in f and f.status in (200, 301, 302):
         # If we received a bozo exception raise it
         if f.bozo:
             if isinstance(f.bozo_exception, feedparser.ThingsNobodyCaresAboutButMe):
@@ -33,13 +33,19 @@ def create_feed_from_url(url):
             else:
                 raise f.bozo_exception
 
-        feed = Feed(parent=root_key(), name=f.channel.title, url=f.url)
+        # If the resource has permanently moved update it's URL
+        feed_url = url
+        if f.status == 301:
+            feed_url = f.href
+
+        feed = Feed(parent=root_key(), name=f.channel.title, url=feed_url)
         if len(f.entries) > 0:
             feed.date_of_last_entry = datetime.fromtimestamp(
                 mktime(f.entries[0].updated_parsed))
         return feed
     else:
         raise Exception("Unexpected response: %s" % f.status)
+
 
 
 class IndexHandler(webapp2.RequestHandler):
