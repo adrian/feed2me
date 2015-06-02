@@ -19,19 +19,25 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'])
 
+def handle_bozo_exception(bozo_exception):
+    if isinstance(bozo_exception, feedparser.ThingsNobodyCaresAboutButMe):
+        logging.warn(bozo_exception)
+    else:
+        raise bozo_exception
 
 def create_feed_from_url(url):
     """ Query the given URL, parse the results and create a Feed object. If
         the response isn't RSS then throw an error """
     f = feedparser.parse(url)
 
+    # Handle obvious errors
+    if f.bozo:
+        handle_bozo_exception(f.bozo_exception)
+
     if 'status' in f and f.status in (200, 301, 302):
         # If we received a bozo exception raise it
         if f.bozo:
-            if isinstance(f.bozo_exception, feedparser.ThingsNobodyCaresAboutButMe):
-                logging.warn(f.bozo_exception)
-            else:
-                raise f.bozo_exception
+            handle_bozo_exception(f.bozo_exception)
 
         # If the resource has permanently moved update it's URL
         feed_url = url
@@ -44,7 +50,7 @@ def create_feed_from_url(url):
                 mktime(f.entries[0].updated_parsed))
         return feed
     else:
-        raise Exception("Unexpected response: %s" % f.status)
+        raise Exception("Unexpected result from feedparser.parse(): %s" % f)
 
 
 
@@ -72,6 +78,8 @@ class FeedAPIHandler(webapp2.RequestHandler):
     def post(self):
         """Create a new feed and save it to the database"""
         feed_url = self.request.get('feed_url')
+
+        logging.debug("URL POSTed: %s" % feed_url)
 
         if feed_url:
             # Check if we already have this feed
@@ -110,6 +118,8 @@ class FeedAPIHandler(webapp2.RequestHandler):
     def delete(self):
         """Delete a feed from the database"""
         feed_url = self.request.get('feed_url')
+
+        logging.debug("URL DELETEed: %s" % feed_url)
 
         if feed_url:
             qry = Feed.query(Feed.url == feed_url)
