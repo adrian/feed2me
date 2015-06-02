@@ -46,7 +46,7 @@ $(document).ready(function() {
     function deleteFeed(feed, complete) {
         if (feed) {
             $.ajax({
-                url: '/feed/?feed_url=' + feed.find('.feed-url').html(),
+                url: '/feed/?feed_url=' + encodeURIComponent(feed.find('.feed-url').html()),
                 type: "DELETE"
             }).done(function(data, textStatus, jqXHR) {
                         feed.fadeOut('fast', complete)

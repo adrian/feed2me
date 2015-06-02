@@ -7,6 +7,8 @@ import json
 import logging
 import feed_utils
 import feedparser
+import urllib
+import HTMLParser
 
 from models import Feed, root_key
 from datetime import datetime
@@ -122,7 +124,9 @@ class FeedAPIHandler(webapp2.RequestHandler):
         logging.debug("URL DELETEed: %s" % feed_url)
 
         if feed_url:
-            qry = Feed.query(Feed.url == feed_url)
+            unquoted_url = urllib.unquote(feed_url)
+            unescaped_url = HTMLParser.HTMLParser().unescape(unquoted_url)
+            qry = Feed.query(Feed.url == unescaped_url)
             if qry.count():
                 feed = qry.get()
                 feed.key.delete()
