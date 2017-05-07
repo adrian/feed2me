@@ -10,6 +10,14 @@ Technologies Used
 * [Bootstrap](http://getbootstrap.com/)
 * [Feedparser](http://code.google.com/p/feedparser/)
 
+Developing
+----------
+1. Install the Google Cloud SDK
+
+2. Run the app locally with,
+
+    dev_appserver.py --log_level debug .
+
 Deploying
 ---------
 1. Register a new application on [Google App Engine](https://appengine.google.com/). You'll need to come up with your own Application Identifier and decide what authentication option to use.

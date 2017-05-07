@@ -1,5 +1,5 @@
 cron:
 - description: check for new feed items
   url: /check_feeds
-  schedule: every 15 minutes
+  schedule: every 1 hours
 

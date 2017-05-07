@@ -4,6 +4,7 @@ import sys
 import unittest2
 import fix_path
 import os
+import logging
 
 USAGE = """%prog SDK_PATH TEST_PATH
 Run unit tests for App Engine apps.
@@ -33,4 +34,8 @@ if __name__ == '__main__':
         sys.exit(1)
     SDK_PATH = args[0]
     TEST_PATH = args[1]
+
+    # logging.basicConfig(stream=sys.stderr)
+    # logging.getLogger().setLevel(logging.DEBUG)
+
     main(SDK_PATH, TEST_PATH)

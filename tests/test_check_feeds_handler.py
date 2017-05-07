@@ -22,6 +22,7 @@ class CheckFeedsHandlerTestCase(unittest.TestCase):
         self.testbed.init_memcache_stub()
         self.testbed.init_datastore_v3_stub()
         self.orig_publish_entry_func = feed_utils.publish_entry
+        self.orig_find_feeds_to_check = feed_utils.find_feeds_to_check
         self.orig_parse_func = feedparser.parse
 
     def test_get(self):
@@ -40,6 +41,11 @@ class CheckFeedsHandlerTestCase(unittest.TestCase):
         def _publish_entry(feed_title, entry, recipent_address):
             publish_entry_called[0] = True
         feed_utils.publish_entry = _publish_entry
+
+        # Create a dummy function to return the feeds to check
+        def _find_feeds_to_check(working_date = datetime.now()):
+            return [feed]
+        feed_utils.find_feeds_to_check = _find_feeds_to_check
 
         # call the method under test
         response = self.testapp.get('/check_feeds')
@@ -70,6 +76,11 @@ class CheckFeedsHandlerTestCase(unittest.TestCase):
             pass
         feed_utils.publish_entry = _publish_entry
 
+        # Create a dummy function to return the feeds to check
+        def _find_feeds_to_check(working_date = datetime.now()):
+            return [feed]
+        feed_utils.find_feeds_to_check = _find_feeds_to_check
+
         # Replace feedparser.parse with our own version that sets the status
         # code to 301 and the href to a new URL
         def _parse(url):
@@ -88,4 +99,5 @@ class CheckFeedsHandlerTestCase(unittest.TestCase):
     def tearDown(self):
         self.testbed.deactivate()
         feed_utils.publish_entry = self.orig_publish_entry_func
+        feed_utils.find_feeds_to_check = self.orig_find_feeds_to_check
         feedparser.parse = self.orig_parse_func
