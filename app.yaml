@@ -1,5 +1,3 @@
-application: feed2me17
-version: 2
 runtime: python27
 api_version: 1
 threadsafe: true

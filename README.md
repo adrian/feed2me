@@ -3,12 +3,14 @@ Feed2me
 
 Feed2me tracks your favourite feeds and sends you an email when new entries are posted. It runs on Google App Engine.
 
+
 Technologies Used
 -----------------
 * [Google App Engine](https://developers.google.com/appengine/)
 * [jQuery](http://jquery.com/)
 * [Bootstrap](http://getbootstrap.com/)
 * [Feedparser](http://code.google.com/p/feedparser/)
+
 
 Developing
 ----------
@@ -18,17 +20,30 @@ Developing
 
     dev_appserver.py --log_level debug .
 
+
 Deploying
 ---------
 1. Register a new application on [Google App Engine](https://appengine.google.com/). You'll need to come up with your own Application Identifier and decide what authentication option to use.
 
-2. Update the 'application' setting in your app.yaml file.
+2. Update the 'recipent_address' in config.py.
 
-3. Update the 'recipent_address' in config.py.
+3. Deploy the application using `gcloud app deploy app.yaml`
 
-4. Deploy the application using `appcfg.py --oauth2 update feed2me/` (you don't need to use --oauth2 but I find it useful)
+4. Browse to your application using `gcloud app browse`
 
-5. If all goes well your app should be available at http://<your app identifier>.appspot.com
+
+Useful Commands
+---------------
+Tail the application log, `gcloud app logs tail -s default`
+
+List deployed versions, `gcloud app versions list`
+
+Open your browser with the app URL, `gcloud app browse`
+
+Open app console, `gcloud app open-console`
+
+Deploy/Redeploy an index (deploy on its own doesn't seem to work), `gcloud app deploy index.yaml`
+
 
 Running Unit Tests
 -------------------

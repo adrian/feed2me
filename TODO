@@ -1,10 +1,9 @@
 Ideas for Improvement
 
-* Check each blog for updates once a day. Spread the checks throughout the day.
+* Send an email if there's a problem fetching/parsing a feed
 * Add feature to snooze feed (stop checking for updates)
-* Record the date of the last post and include in UI
+* Show the date of last post for each feed in the UI
 * Record the number of posts in the past three months and include in the UI
-* Fix netflix tech blog parsing
 * If a feed fails three times snooze it and flag on UI
 
 * Make the email subject and body configurable
@@ -19,3 +18,5 @@ Ideas for Improvement
 * Improve the UI look and feel
 * Paginate feeds
 * Import/Export feeds
+
+* DONE Check each blog for updates once a day. Spread the checks throughout the day.
