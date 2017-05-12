@@ -1,6 +1,6 @@
 import logging
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from models import Feed, root_key
 from google.appengine.api import mail, users, app_identity
 
@@ -41,11 +41,21 @@ def find_feeds_to_check(working_date = datetime.now()):
 def publish_entry(feed_title, entry, recipent_address):
     """Send an email for this new entry"""
     logging.debug('publishing "%s"' % entry.title)
-    sender_address = _sender_address()
+    sender_address = _sender_address('rss')
     subject = "(RSS) %s :: %s" % (feed_title, entry.title)
     body = entry.link
 
     mail.send_mail(sender_address, recipent_address, subject, body)
 
-def _sender_address():
-    return "rss@%s.appspotmail.com" % app_identity.get_application_id()
+def report_error(title, message, recipent_address):
+    """Send an email to report an error"""
+    logging.debug('reporting error for "%s"' % title)
+    sender_address = _sender_address('error')
+    subject = "(ERROR) %s" % title
+    body = message
+
+    mail.send_mail(sender_address, recipent_address, subject, body)
+
+def _sender_address(from_type):
+    return "%s@%s.appspotmail.com" % \
+        (from_type, app_identity.get_application_id())

@@ -6,9 +6,11 @@ import webapp2
 import feedparser
 
 from models import Feed, root_key
-from datetime import datetime
+from datetime import datetime,  timedelta
 from google.appengine.ext import testbed
 from views import CheckFeedsHandler
+from collections import namedtuple
+from feedparser import FeedParserDict
 
 
 class CheckFeedsHandlerTestCase(unittest.TestCase):
@@ -21,9 +23,13 @@ class CheckFeedsHandlerTestCase(unittest.TestCase):
         self.testbed.activate()
         self.testbed.init_memcache_stub()
         self.testbed.init_datastore_v3_stub()
+        self.testbed.init_mail_stub()
+        self.mail_stub = self.testbed.get_stub(testbed.MAIL_SERVICE_NAME)
+
         self.orig_publish_entry_func = feed_utils.publish_entry
         self.orig_find_feeds_to_check = feed_utils.find_feeds_to_check
         self.orig_parse_func = feedparser.parse
+
 
     def test_get(self):
         # Create a dummy feed with a last_checked date well in the past
@@ -46,6 +52,14 @@ class CheckFeedsHandlerTestCase(unittest.TestCase):
         def _find_feeds_to_check(working_date = datetime.now()):
             return [feed]
         feed_utils.find_feeds_to_check = _find_feeds_to_check
+
+        # Replace feedparser.parse with our own version that sets the status
+        # code to 200 and the href to a new URL
+        def _parse(url):
+            parsed_feed = self.orig_parse_func(url)
+            parsed_feed['status'] = 200
+            return parsed_feed
+        feedparser.parse = _parse
 
         # call the method under test
         response = self.testapp.get('/check_feeds')
@@ -94,6 +108,42 @@ class CheckFeedsHandlerTestCase(unittest.TestCase):
 
         # check the feed's URL has been updated
         self.assertEquals(feed.url, 'http://def.com')
+
+
+    def test_check_feed_with_probem(self):
+        last_checked = datetime(2000, 1, 1)
+        date_of_last_entry = datetime(2000, 1, 1)
+        feed_url = 'http://x.y.z'
+        feed = Feed(name = "Test Feed",
+                    last_checked = last_checked,
+                    date_of_last_entry = date_of_last_entry,
+                    url = feed_url,
+                    parent = root_key())
+        feed.put()
+
+        # Replace feedparser.parse with our own version that sets the status
+        # code to 500 to simulate a server side error
+        def _parse(url):
+            parsed_feed = FeedParserDict(status = 500)
+            return parsed_feed
+        feedparser.parse = _parse
+
+        # run the method under test
+        try:
+            response = self.testapp.get('/check_feeds')
+            self.fail("Should have raised an exception as server returned 500")
+        except Exception as e:
+            self.assertTrue(
+                str(e).startswith("Bad response: 500 Internal Server Error"))
+
+        # there should be one email message describing the problem
+        messages = self.mail_stub.get_sent_messages()
+        self.assertEquals(1, len(messages))
+        self.assertEquals("URL '%s' returned HTTP code 500" % feed_url,
+            messages[0].body.payload)
+
+        # check the feed's last_checked date was updated
+        self.assertNotEqual(feed.last_checked, last_checked)
 
 
     def tearDown(self):

@@ -105,6 +105,20 @@ class FeedUtilsTestCase(unittest.TestCase):
         self.assertEqual("(RSS) %s :: %s" % (feed_title, entry.title), messages[0].subject)
         self.assertEqual(entry.link, messages[0].body.decode())
 
+    def testReportError(self):
+        feed_title = "Test Feed"
+        recipent_address = "test_recipent@test.com"
+        message = "problem with XYZ"
+
+        feed_utils.report_error(feed_title, message, recipent_address)
+
+        messages = self.mail_stub.get_sent_messages()
+        self.assertEqual(1, len(messages))
+        self.assertEqual(recipent_address, messages[0].to)
+        self.assertEqual('error@testbed-test.appspotmail.com', messages[0].sender)
+        self.assertEqual("(ERROR) %s" % feed_title, messages[0].subject)
+        self.assertEqual(message, messages[0].body.decode())
+
     def tearDown(self):
         self.testbed.deactivate()
 

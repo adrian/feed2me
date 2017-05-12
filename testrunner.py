@@ -35,7 +35,7 @@ if __name__ == '__main__':
     SDK_PATH = args[0]
     TEST_PATH = args[1]
 
-    # logging.basicConfig(stream=sys.stderr)
-    # logging.getLogger().setLevel(logging.DEBUG)
+    logging.basicConfig(stream=sys.stderr)
+    logging.getLogger().setLevel(logging.ERROR)
 
     main(SDK_PATH, TEST_PATH)
