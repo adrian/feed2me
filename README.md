@@ -47,4 +47,6 @@ Deploy/Redeploy an index (deploy on its own doesn't seem to work), `gcloud app d
 
 Running Unit Tests
 -------------------
-    $ ./testrunner.py ~/apps/google_appengine/ tests/
+    $ source .venv/bin/activate
+    $ pip install -r requirements.txt
+    $ ./testrunner.py [APPENGINE SDK DIR] tests/

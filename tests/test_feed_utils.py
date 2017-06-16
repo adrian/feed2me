@@ -86,6 +86,30 @@ class FeedUtilsTestCase(unittest.TestCase):
         self.assertEqual("Test 5", feeds[0].name)
         self.assertEqual("Test 3", feeds[1].name)
 
+    def testFindFeedsToCheckNoHoursLeftInDay(self):
+        feeds = [
+            {
+                'name': 'Test 1',
+                'last_checked': datetime(2017, 5, 6, 19, 7, 33)
+            }
+        ]
+
+        for feed_data in feeds:
+            feed = Feed(name = feed_data['name'],
+                        last_checked = feed_data['last_checked'],
+                        parent = root_key())
+            feed.put()
+
+        working_date = datetime.now().replace(hour=23, minute=59, second=59)
+        feeds = feed_utils.find_feeds_to_check(working_date)
+        self.assertEqual(1, len(feeds))
+        self.assertEqual("Test 1", feeds[0].name)
+
+    def testFindFeedsToCheckNoFeedsToCheck(self):
+        working_date = datetime.now().replace(hour=0, minute=0, second=0)
+        feeds = feed_utils.find_feeds_to_check(working_date)
+        self.assertEqual(0, len(feeds))
+
     def testPublishEmail(self):
         feed_title = "Test Feed"
         recipent_address = "test_recipent@test.com"

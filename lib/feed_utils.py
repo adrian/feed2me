@@ -20,6 +20,8 @@ def find_feeds_to_check(working_date = datetime.now()):
             .fetch(limit=None)
     )
     logging.debug("Feeds eligible for check: % d" % len(feeds_eligible_for_check))
+    if len(feeds_eligible_for_check) == 0:
+        return []
 
     end_of_day = working_date.replace(hour=23, minute=59, second=59)
     time_left_in_day = end_of_day - working_date
@@ -30,6 +32,8 @@ def find_feeds_to_check(working_date = datetime.now()):
     # check one per hour
     if hours_left_in_day > len(feeds_eligible_for_check):
         number_of_feeds_per_block = 1
+    elif hours_left_in_day == 0:
+        number_of_feeds_per_block = len(feeds_eligible_for_check)
     else:
         number_of_feeds_per_block = int(
             len(feeds_eligible_for_check) / hours_left_in_day
