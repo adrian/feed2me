@@ -9,6 +9,7 @@ import feed_utils
 import feedparser
 import urllib
 import HTMLParser
+import traceback
 
 from models import Feed, root_key
 from datetime import datetime
@@ -228,7 +229,9 @@ class CheckFeedsHandler(webapp2.RequestHandler):
                     (new_entries, feed.url))
 
             except Exception as e:
-                feed_utils.report_error(feed.name, str(e), recipent_address)
+                feed_utils.report_error(feed.name, traceback.format_exc(),
+                    recipent_address)
+                logging.exception(e)
                 raise e
             finally:
                 feed.last_checked = datetime.now()

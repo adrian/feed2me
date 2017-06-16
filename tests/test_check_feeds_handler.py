@@ -145,7 +145,7 @@ class CheckFeedsHandlerTestCase(unittest.TestCase):
         # there should be one email message describing the problem
         messages = self.mail_stub.get_sent_messages()
         self.assertEquals(1, len(messages))
-        self.assertEquals("URL '%s' returned HTTP code 500" % feed_url,
+        self.assertTrue("URL '%s' returned HTTP code 500" % feed_url in
             messages[0].body.payload)
 
         # check the feed's last_checked date was updated
