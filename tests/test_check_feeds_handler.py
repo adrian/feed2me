@@ -125,7 +125,7 @@ class CheckFeedsHandlerTestCase(unittest.TestCase):
         # Replace feedparser.parse with our own version that sets the status
         # code to 500 to simulate a server side error
         def _parse(url):
-            parsed_feed = FeedParserDict(status = 500)
+            parsed_feed = FeedParserDict(status = 500, bozo = False)
             return parsed_feed
         feedparser.parse = _parse
 

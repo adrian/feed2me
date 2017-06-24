@@ -157,6 +157,13 @@ class CheckFeedsHandler(webapp2.RequestHandler):
 
                 parsed_feed = feedparser.parse(feed.url)
 
+                if parsed_feed.bozo:
+                    handle_bozo_exception(parsed_feed.bozo_exception)
+
+                if 'status' not in parsed_feed:
+                    raise Exception("No 'status' attribute on parsed feed: %s" %
+                        parsed_feed)
+
                 if parsed_feed.status not in (200, 301):
                     raise Exception("URL '%s' returned HTTP code %s" %
                         (feed.url, parsed_feed.status))
