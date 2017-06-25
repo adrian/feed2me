@@ -14,7 +14,7 @@ import traceback
 from models import Feed, root_key
 from datetime import datetime
 from time import mktime
-from google.appengine.api import users
+from google.appengine.api import users, urlfetch
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -143,6 +143,10 @@ class CheckFeedsHandler(webapp2.RequestHandler):
         recipent_address = self.app.config.get('recipent_address')
         if not recipent_address:
             raise Exception("'recipent_address' not configured in config.py")
+
+        # By default urlfetch (used by urllib on GAE) will timeout after 5
+        # seconds.
+        urlfetch.set_default_fetch_deadline(30)
 
         feeds_to_check = feed_utils.find_feeds_to_check()
         logging.info("Number of feeds to check: %d" % len(feeds_to_check))
