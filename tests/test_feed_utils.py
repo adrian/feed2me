@@ -43,6 +43,8 @@ class FeedUtilsTestCase(unittest.TestCase):
 
         working_date = datetime(2017, 5, 6, 19, 45, 0)
         feeds = feed_utils.find_feeds_to_check(working_date)
+
+        # there are 4 hours left in the day so only 1 feed will be returned
         self.assertEqual(1, len(feeds))
         self.assertEqual("Test 3", feeds[0].name)
 

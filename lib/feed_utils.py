@@ -3,6 +3,7 @@ import logging
 from datetime import datetime
 from models import Feed, root_key
 from google.appengine.api import mail, users, app_identity
+from google.appengine.ext import ndb
 
 def find_feeds_to_check(working_date = datetime.now()):
     """
@@ -14,12 +15,12 @@ def find_feeds_to_check(working_date = datetime.now()):
     each time the function is called to ensure every feed is checked each day.
     """
     start_of_day = working_date.replace(hour=0, minute=0 ,second=0)
-    feeds_eligible_for_check = (
-        Feed.query(Feed.last_checked < start_of_day, ancestor=root_key())
-            .order(Feed.last_checked)
-            .fetch(limit=None)
-    )
-    logging.debug("Feeds eligible for check: % d" % len(feeds_eligible_for_check))
+    feeds_query_str = "SELECT *  from Feed WHERE last_checked < :1 ORDER BY last_checked ASC"
+    logging.debug("Feeds eligible for check query: %s, start_of_day: %s" %
+        (feeds_query_str, start_of_day))
+    feeds_query = ndb.gql(feeds_query_str, start_of_day)
+    feeds_eligible_for_check = feeds_query.fetch(limit=None)
+    logging.debug("Feeds eligible for check: %d" % len(feeds_eligible_for_check))
     if len(feeds_eligible_for_check) == 0:
         return []
 
