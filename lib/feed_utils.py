@@ -14,8 +14,8 @@ def find_feeds_to_check(working_date = datetime.now()):
     the feeds will be returned in blocks of four. The balancing is recalculated
     each time the function is called to ensure every feed is checked each day.
     """
-    start_of_day = working_date.replace(hour=0, minute=0 ,second=0)
-    feeds_query_str = "SELECT *  from Feed WHERE last_checked < :1 ORDER BY last_checked ASC"
+    start_of_day = working_date.replace(hour=0, minute=0 ,second=0, microsecond=0)
+    feeds_query_str = "SELECT * from Feed WHERE last_checked < :1 ORDER BY last_checked ASC"
     logging.debug("Feeds eligible for check query: %s, start_of_day: %s" %
         (feeds_query_str, start_of_day))
     feeds_query = ndb.gql(feeds_query_str, start_of_day)
