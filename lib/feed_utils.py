@@ -24,9 +24,9 @@ def find_feeds_to_check(working_date = datetime.now()):
     if len(feeds_eligible_for_check) == 0:
         return []
 
-    end_of_day = working_date.replace(hour=23, minute=59, second=59)
+    end_of_day = working_date.replace(hour=23, minute=59, second=59, microsecond=0)
     time_left_in_day = end_of_day - working_date
-    hours_left_in_day = divmod(time_left_in_day.total_seconds(), 3600)[0]
+    hours_left_in_day = max(divmod(time_left_in_day.total_seconds(), 3600)[0], 0)
     logging.debug("Hours left in the day: %d" % hours_left_in_day)
 
     # if there are more hours in the day then there are feeds to check then
