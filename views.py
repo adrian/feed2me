@@ -243,7 +243,6 @@ class CheckFeedsHandler(webapp2.RequestHandler):
                 feed_utils.report_error(feed.name, traceback.format_exc(),
                     recipent_address)
                 logging.exception(e)
-                raise e
             finally:
-                feed.last_checked = datetime.now()
+                feed.last_checked = datetime.utcnow()
                 feed.put()
