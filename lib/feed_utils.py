@@ -5,7 +5,7 @@ from models import Feed, root_key
 from google.appengine.api import mail, users, app_identity
 from google.appengine.ext import ndb
 
-def find_feeds_to_check(working_date = datetime.utcnow()):
+def find_feeds_to_check(working_date = None):
     """
     The goal is to check each feed for updates once per day. This function will
     return all feeds that haven't yet been checked today on working_date
@@ -14,7 +14,12 @@ def find_feeds_to_check(working_date = datetime.utcnow()):
     the feeds will be returned in blocks of four. The balancing is recalculated
     each time the function is called to ensure every feed is checked each day.
     """
-    logging.debug("working_date: %s" % working_date)
+    logging.debug("working_date parameter: %s" % working_date)
+
+    if working_date == None:
+        working_date = datetime.utcnow()
+        logging.debug("working_date set to: %s" % working_date)
+
     start_of_day = working_date.replace(hour=0, minute=0 ,second=0, microsecond=0)
     start_of_day_str = start_of_day.strftime('%Y-%m-%d %H:%M:%S')
     feeds_query_str = "SELECT * from Feed WHERE last_checked < DATETIME(:1) ORDER BY last_checked ASC"
